@@ -16,6 +16,8 @@
 
 package org.codehaus.groovy.maven.plugin.stubgen;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.shared.io.scan.mapping.SourceMapping;
 import org.apache.maven.shared.io.scan.mapping.SuffixMapping;
 import org.apache.maven.shared.model.fileset.FileSet;
@@ -25,6 +27,9 @@ import org.codehaus.groovy.maven.runtime.StubCompiler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Support for Java stub generation mojos.
@@ -48,6 +53,67 @@ public abstract class AbstractGenerateStubsMojo
 {
     protected AbstractGenerateStubsMojo() {
         super(StubCompiler.KEY);
+    }
+    
+    public void execute() throws MojoExecutionException, MojoFailureException {
+    	super.execute();
+    	
+    	/*
+    	 * Treatment for MGROOVY-187.
+    	 */
+        try {
+        	resetStubModifiedDates();
+		} catch (Exception e) {
+			throw new MojoExecutionException("Failed to get output folder.", e);
+		}
+    }
+   
+    /**
+     * Modifies the dates of the created stubs to 1970, ensuring that the Java
+     * compiler will not come along and overwrite perfectly good compiled Groovy 
+     * just because it has a newer source stub.  Basically, this prevents the 
+     * stubs from causing a side effect with the Java compiler, but still allows
+     * the stubs to work with JavaDoc.  Ideally, the code for this should be 
+     * added to the code that creates the stubs, but as that code is sprinkled 
+     * across several different runtimes, I am putting this into the common area.
+     * @author Jason Smith
+     */
+    private void resetStubModifiedDates() throws Exception
+    {
+		List stubs = recurseFiles(getOutputDirectory());
+		for(Iterator i = stubs.iterator(); i.hasNext(); )
+		{
+			File file = (File)i.next();
+			file.setLastModified(0L);
+		}
+    }
+    
+    /**
+     * Get all files, recursively, in a folder.
+     * TODO: Should be moved into a utility class.
+     * @param folder The folder to look in.
+     * @return A list of <code>File</code> instances.
+     * @author Jason Smith
+     */
+    private List recurseFiles(File folder)
+    {
+    	List result = new ArrayList();
+    	File[] files = folder.listFiles();
+    	if(files != null)
+    	{
+	    	for(int i=0; i<files.length ; i++)
+	    	{
+	    		if(files[i].isDirectory())
+	    		{
+	    			result.addAll(recurseFiles(files[i]));
+	    		}
+	    		else
+	    		{
+	    			result.add(files[i]);
+	    		}
+	    	}
+    	}
+    	return result;
     }
 
     protected abstract void forceCompile(final File file);
