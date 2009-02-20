@@ -140,9 +140,12 @@ public class ClassCompilerFeature
             //
             
             CodeSource security = null;
-            
-            CompilationUnit cu = new CompilationUnit(cc, security, gcl);
-
+            GroovyClassLoader transformLoader = new GroovyClassLoader(getClass().getClassLoader());
+            for (int i=0; i<classpath.length; i++) {
+                transformLoader.addURL(classpath[i]);
+            }
+          
+            CompilationUnit cu = new CompilationUnit(cc, security, gcl, transformLoader);
             log.debug("Compiling {} sources", String.valueOf(sources.size()));
 
             for (Iterator iter = sources.iterator(); iter.hasNext();) {
