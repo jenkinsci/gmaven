@@ -52,7 +52,7 @@ public abstract class ProviderMojoSupport
     /**
      * A comma-seperated list of provider keys, in order of preference of selection.
      *
-     * @parameter expression="${gmaven.runtime}" default-value="1.6"
+     * @parameter expression="${gmaven.runtime}" default-value="1.5"
      *
      * @noinspection UnusedDeclaration
      */
