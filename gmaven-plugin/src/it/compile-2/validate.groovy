@@ -18,6 +18,9 @@
 // $Id$
 //
 
+/*
+FIXME: This will not work correctly if the shitty classpath does not have access to the correct Groovy runtime.
+
 def cl = this.class.classLoader
 
 cl.addURL(new File(basedir, 'target/classes').toURI().toURL())
@@ -25,3 +28,6 @@ cl.addURL(new File(basedir, 'target/classes').toURI().toURL())
 def type = cl.loadClass('Hello')
 
 type.newInstance().hello()
+*/
+
+assert new File(basedir, 'target/classes/Hello.class').exists()
