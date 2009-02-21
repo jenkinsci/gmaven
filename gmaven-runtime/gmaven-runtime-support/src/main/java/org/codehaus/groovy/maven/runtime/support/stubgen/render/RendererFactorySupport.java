@@ -89,7 +89,7 @@ public abstract class RendererFactorySupport
         MethodDef method;
 
         method = new MethodDef();
-        method.getModifiers().add("public").add("static").add("transient");
+        method.getModifiers().add("public").add("static");
         method.setReturns(new TypeDef("void"));
         method.setName("main");
         method.addParameter(new ParameterDef(new TypeDef("java.lang.String", 1), "args"));
@@ -97,8 +97,9 @@ public abstract class RendererFactorySupport
 
         method = new MethodDef();
         method.getModifiers().add("public");
-        method.setReturns(new TypeDef("void"));
+        method.setReturns(new TypeDef("java.lang.Object"));
         method.setName("run");
+        script.addMethod(method);
 
         return createRenderer(script);
     }
