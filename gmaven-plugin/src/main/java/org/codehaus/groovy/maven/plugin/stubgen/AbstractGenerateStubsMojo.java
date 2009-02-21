@@ -47,6 +47,7 @@ import java.util.List;
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author Jason Smith
  */
 public abstract class AbstractGenerateStubsMojo
     extends CompilerMojoSupport
@@ -57,15 +58,14 @@ public abstract class AbstractGenerateStubsMojo
     
     public void execute() throws MojoExecutionException, MojoFailureException {
     	super.execute();
-    	
-    	/*
-    	 * Treatment for MGROOVY-187.
-    	 */
+
+        // Treatment for MGROOVY-187.
         try {
-        	resetStubModifiedDates();
-		} catch (Exception e) {
-			throw new MojoExecutionException("Failed to get output folder.", e);
-		}
+            resetStubModifiedDates();
+        }
+        catch (Exception e) {
+            throw new MojoExecutionException("Failed to get output folder.", e);
+        }
     }
    
     /**
@@ -76,44 +76,41 @@ public abstract class AbstractGenerateStubsMojo
      * the stubs to work with JavaDoc.  Ideally, the code for this should be 
      * added to the code that creates the stubs, but as that code is sprinkled 
      * across several different runtimes, I am putting this into the common area.
-     * @author Jason Smith
      */
-    private void resetStubModifiedDates() throws Exception
-    {
-		List stubs = recurseFiles(getOutputDirectory());
-		for(Iterator i = stubs.iterator(); i.hasNext(); )
-		{
-			File file = (File)i.next();
-			file.setLastModified(0L);
-		}
+    private void resetStubModifiedDates() throws Exception {
+        List stubs = recurseFiles(getOutputDirectory());
+
+        for (Iterator i = stubs.iterator(); i.hasNext();) {
+            File file = (File) i.next();
+            file.setLastModified(0L);
+        }
     }
     
     /**
      * Get all files, recursively, in a folder.
      * TODO: Should be moved into a utility class.
+     *
      * @param folder The folder to look in.
      * @return A list of <code>File</code> instances.
-     * @author Jason Smith
      */
-    private List recurseFiles(File folder)
-    {
-    	List result = new ArrayList();
-    	File[] files = folder.listFiles();
-    	if(files != null)
-    	{
-	    	for(int i=0; i<files.length ; i++)
-	    	{
-	    		if(files[i].isDirectory())
-	    		{
-	    			result.addAll(recurseFiles(files[i]));
-	    		}
-	    		else
-	    		{
-	    			result.add(files[i]);
-	    		}
-	    	}
-    	}
-    	return result;
+    private List recurseFiles(final File folder) {
+        assert folder != null;
+
+        List result = new ArrayList();
+        File[] files = folder.listFiles();
+
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    result.addAll(recurseFiles(files[i]));
+                }
+                else {
+                    result.add(files[i]);
+                }
+            }
+        }
+
+        return result;
     }
 
     protected abstract void forceCompile(final File file);
