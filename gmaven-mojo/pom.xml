@@ -34,6 +34,10 @@
         Provides support for implementing Maven 2 plugins in Groovy.
     </description>
 
+    <!--
+    NOTE: Using the Java 1.4 compatible Groovy 1.5 here for compatibility.
+    -->
+    
     <dependencies>
         <dependency>
             <groupId>org.codehaus.groovy.maven.runtime</groupId>
@@ -42,7 +46,7 @@
 
         <dependency>
             <groupId>org.codehaus.groovy.maven.runtime</groupId>
-            <artifactId>gmaven-runtime-1.6</artifactId>
+            <artifactId>gmaven-runtime-1.5</artifactId>
         </dependency>
         
         <dependency>
@@ -74,6 +78,9 @@
                             <goal>generateTestStubs</goal>
                             <goal>testCompile</goal>
                         </goals>
+                        <configuration>
+                            <providerSelection>1.5</providerSelection>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
