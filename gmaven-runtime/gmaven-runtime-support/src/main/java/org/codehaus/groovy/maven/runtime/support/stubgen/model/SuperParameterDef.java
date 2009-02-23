@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 /**
- * ???
+ * Representation of a super-parameter definition.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -43,5 +43,11 @@ public class SuperParameterDef
 
     public void setType(final TypeDef type) {
         this.type = type;
+    }
+
+    public void setType(final String type) {
+        assert type != null;
+
+        setType(new TypeDef(type));
     }
 }

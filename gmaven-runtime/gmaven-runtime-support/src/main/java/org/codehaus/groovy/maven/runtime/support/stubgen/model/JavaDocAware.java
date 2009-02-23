@@ -17,7 +17,7 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 /**
- * ???
+ * Provides access for Javadoc-aware elements.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

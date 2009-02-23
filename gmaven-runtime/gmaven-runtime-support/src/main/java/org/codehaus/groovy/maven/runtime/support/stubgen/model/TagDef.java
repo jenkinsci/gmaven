@@ -19,7 +19,7 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 import java.util.Map;
 
 /**
- * ???
+ * Representation of Javadoc tag definition.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

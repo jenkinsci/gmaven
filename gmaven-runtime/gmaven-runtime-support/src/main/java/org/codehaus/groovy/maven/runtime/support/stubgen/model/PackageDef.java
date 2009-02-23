@@ -20,17 +20,18 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * ???
+ * Representation of a package definition.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class PackageDef
     extends NamedElement
+    implements AnnotationsAware
 {
     private SourceDef parent;
     
-    private Set annotations = new LinkedHashSet();
+    private final Set annotations = new LinkedHashSet();
 
     public SourceDef getParent() {
         return parent;

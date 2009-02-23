@@ -22,7 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * ???
+ * Representation of a class definition.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -36,11 +36,11 @@ public class ClassDef
 
     private TypeDef superClass;
 
-    private Set implementz = new LinkedHashSet();
+    private final Set implementz = new LinkedHashSet();
 
-    private Set fields = new LinkedHashSet();
+    private final Set fields = new LinkedHashSet();
 
-    private Set methods = new LinkedHashSet();
+    private final Set methods = new LinkedHashSet();
 
     public ClassDef() {
         this(Type.CLASS);

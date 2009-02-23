@@ -19,7 +19,7 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 import java.io.Serializable;
 
 /**
- * ???
+ * Basic type which all model elements extend from.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

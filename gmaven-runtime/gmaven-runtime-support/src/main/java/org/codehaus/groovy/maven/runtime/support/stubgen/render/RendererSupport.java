@@ -193,7 +193,7 @@ public class RendererSupport
         String name = def.getName();
 
         if (name == null) {
-            name = "java.lang.Object";
+            name = TypeDef.OBJECT;
         }
         else {
             ImportDef alias = (ImportDef)importAliases.get(name);
@@ -330,7 +330,7 @@ public class RendererSupport
 
         ModifiersDef modifiers = clazz.getModifiers();
         if (!modifiers.hasAccessModifiers()) {
-            modifiers.add("public");
+            modifiers.add(ModifiersDef.PUBLIC);
         }
 
         renderModifiers(out, clazz);
@@ -474,15 +474,15 @@ public class RendererSupport
         field.setJavaDoc(def.getJavaDoc());
         field.setType(def.getType());
         field.setName(def.getName());
-        field.getModifiers().merge(def.getModifiers()).add("private");
+        field.getModifiers().merge(def.getModifiers()).add(ModifiersDef.PRIVATE);
         renderField(out, field);
 
         String name = capitalize(def.getName());
 
         // Setup the modifiers for property methods
         ModifiersDef modifiers = def.getModifiers();
-        modifiers.add("public");
-        modifiers.remove("transient").remove("volatile");
+        modifiers.add(ModifiersDef.PUBLIC);
+        modifiers.remove(ModifiersDef.TRANSIENT).remove(ModifiersDef.VOLATILE);
 
         MethodDef getter = new MethodDef();
         getter.setParent(def.getParent());
@@ -510,8 +510,8 @@ public class RendererSupport
             MethodDef setter = new MethodDef();
             setter.setParent(def.getParent());
             setter.setName("set" + name);
-            setter.setReturns(new TypeDef("void"));
-            setter.addParameter(new ParameterDef(def.getType(), "value"));
+            setter.setReturns(TypeDef.VOID);
+            setter.addParameter(def.getType(), "value");
             setter.getModifiers().merge(modifiers);
 
             if (!definedMethods.containsKey(setter.signature())) {
@@ -559,7 +559,7 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add("public");
+        def.getModifiers().add(ModifiersDef.PUBLIC);
         def.setReturns("groovy.lang.MetaClass");
         def.setName("getMetaClass");
 
@@ -570,8 +570,8 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add("public");
-        def.setReturns("void");
+        def.getModifiers().add(ModifiersDef.PUBLIC);
+        def.setReturns(TypeDef.VOID);
         def.setName("setMetaClass");
         def.addParameter("groovy.lang.MetaClass", "metaClass");
 
@@ -582,11 +582,11 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add("public");
-        def.setReturns("java.lang.Object");
+        def.getModifiers().add(ModifiersDef.PUBLIC);
+        def.setReturns(TypeDef.OBJECT);
         def.setName("invokeMethod");
-        def.addParameter("java.lang.String", "name");
-        def.addParameter("java.lang.Object", "args");
+        def.addParameter(TypeDef.STRING, "name");
+        def.addParameter(TypeDef.OBJECT, "args");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -595,10 +595,10 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add("public");
-        def.setReturns("java.lang.Object");
+        def.getModifiers().add(ModifiersDef.PUBLIC);
+        def.setReturns(TypeDef.OBJECT);
         def.setName("getProperty");
-        def.addParameter("java.lang.String", "name");
+        def.addParameter(TypeDef.STRING, "name");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -607,11 +607,11 @@ public class RendererSupport
 
         def = new MethodDef();
         def.setParent(clazz);
-        def.getModifiers().add("public");
-        def.setReturns("void");
+        def.getModifiers().add(ModifiersDef.PUBLIC);
+        def.setReturns(TypeDef.VOID);
         def.setName("setProperty");
-        def.addParameter("java.lang.String", "name");
-        def.addParameter("java.lang.Object", "value");
+        def.addParameter(TypeDef.STRING, "name");
+        def.addParameter(TypeDef.OBJECT, "value");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -642,29 +642,81 @@ public class RendererSupport
         }
     }
 
+    protected ConstructorDef createMagicConstructor() {
+        ConstructorDef def = new ConstructorDef(true);
+        def.setParent(clazz);
+        def.getModifiers().add(ModifiersDef.PRIVATE);
+        def.setJavaDoc("Magic constructor");
+
+        // Add insane params which no one would ever use... :-(
+        def.addParameter("java.lang.Void", "void0");
+        def.addParameter("java.lang.Void", "void1");
+        def.addParameter("java.lang.Void", "void2");
+
+        //
+        // NOTE: This must match up with what is invoked in {@link #renderMagicConstructorInvoke}
+        //
+
+        return def;
+    }
+
+    protected void renderMagicConstructorInvoke(final PrintWriter out, final ConstructorDef def) {
+        assert out != null;
+        assert def != null;
+
+        out.print("        this((java.lang.Void)null, (java.lang.Void)null, (java.lang.Void)null");
+
+        // If the given constructor declares throwables, then invoke correct magic constructor
+        Iterator iter = def.getThrows().iterator();
+        while (iter.hasNext()) {
+            TypeDef type = (TypeDef)iter.next();
+            out.print(", ");
+            out.print("(");
+            out.print(type.getName());
+            out.print(")null");
+        }
+
+        out.println(");");
+    }
+    
     protected void renderMagicConstructors(final PrintWriter out) {
         assert out != null;
 
-        //
-        // TODO: Could just use a cached magic super() from constrotors for each constructor to avoid needing this
-        //
-        
-        // Only render the magic constructor if there are other constructors defined
+        // Only render magic constructors if there are other constructors defined
         if (!clazz.getConstructors().isEmpty()) {
-            ConstructorDef def = new ConstructorDef();
-            def.setMagic(true);
-            def.setParent(clazz);
-            def.getModifiers().add("private");
+            int count=0;
 
-            // Add insane params which no one would ever use... :-(
-            def.addParameter("java.lang.Void", "void1");
-            def.addParameter("java.lang.Void", "void2");
-            def.addParameter("java.lang.Void", "void3");
+            // Generate magic constructor for constructors with a throws clauses.
+            Iterator iter = clazz.getConstructors().iterator();
+            while (iter.hasNext()) {
+                ConstructorDef ctor = (ConstructorDef)iter.next();
+                if (!ctor.getThrows().isEmpty()) {
+                    // Add a magic constructor based on the default, adding a parameter for each throwable in the list
+                    Iterator iter2 = ctor.getThrows().iterator();
+                    ConstructorDef def = createMagicConstructor();
+                    def.getThrows().addAll(ctor.getThrows());
 
-            renderMethod(out, def);
-            out.println();
+                    int i=0;
+                    while (iter2.hasNext()) {
+                        TypeDef type = (TypeDef)iter2.next();
+                        def.addParameter(type.getName(), "cause" + i++);
+                    }
+
+                    renderMethod(out, def);
+                    out.println();
+
+                    count++;
+                }
+            }
+
+            // Generate the default magic constructor, if we didn't generate any others
+            if (count == 0) {
+                renderMethod(out, createMagicConstructor());
+                out.println();
+            }
         }
     }
+
 
     protected void renderMethod(final PrintWriter out, final MethodDef def) {
         assert out != null;
@@ -681,7 +733,7 @@ public class RendererSupport
 
             ModifiersDef modifiers = def.getModifiers();
             if (!modifiers.hasAccessModifiers()) {
-                modifiers.add("public");
+                modifiers.add(ModifiersDef.PUBLIC);
             }
 
             renderModifiers(out, def);
@@ -797,13 +849,6 @@ public class RendererSupport
         return null;
     }
 
-    protected void renderMagicConstructorInvoke(final PrintWriter out, final ConstructorDef def) {
-        assert out != null;
-        assert def != null;
-
-        out.println("        this((java.lang.Void)null, (java.lang.Void)null, (java.lang.Void)null);");
-    }
-
     protected void renderSuperParameters(final PrintWriter out, final ConstructorDef def) {
         assert out != null;
         assert def != null;
@@ -843,7 +888,7 @@ public class RendererSupport
         TypeDef type = def.getType();
         if (type == null) {
             // This is probably this, null or some dot expression, which needs to be handled better
-            out.print("null");
+            out.print(TypeDef.NULL);
         }
         else {
             out.print("(");

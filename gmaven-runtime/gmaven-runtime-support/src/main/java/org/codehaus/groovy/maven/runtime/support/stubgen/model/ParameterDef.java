@@ -20,22 +20,22 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * ???
+ * Representation of a parameter definition.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class ParameterDef
     extends NamedElement
-    implements ModifiersAware
+    implements ModifiersAware, AnnotationsAware
 {
     private MethodDef parent;
 
     private TypeDef type;
 
-    private Set annotations = new LinkedHashSet();
+    private final Set annotations = new LinkedHashSet();
 
-    private ModifiersDef modifiers = new ModifiersDef();
+    private final ModifiersDef modifiers = new ModifiersDef();
 
     public ParameterDef() {}
 

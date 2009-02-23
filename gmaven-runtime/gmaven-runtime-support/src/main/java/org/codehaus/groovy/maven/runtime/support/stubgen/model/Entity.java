@@ -20,20 +20,20 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * ???
+ * Basic type which all entities extend from.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public abstract class Entity
     extends NamedElement
-    implements ModifiersAware, JavaDocAware
+    implements ModifiersAware, JavaDocAware, AnnotationsAware
 {
     private JavaDocDef javaDoc;
 
-    private Set annotations = new LinkedHashSet();
+    private final Set annotations = new LinkedHashSet();
 
-    private ModifiersDef modifiers = new ModifiersDef();
+    private final ModifiersDef modifiers = new ModifiersDef();
 
     public JavaDocDef getJavaDoc() {
         return javaDoc;
@@ -41,6 +41,10 @@ public abstract class Entity
 
     public void setJavaDoc(final JavaDocDef javaDoc) {
         this.javaDoc = javaDoc;
+    }
+
+    public void setJavaDoc(final String comment) {
+        setJavaDoc(new JavaDocDef(comment));
     }
 
     public ModifiersDef getModifiers() {

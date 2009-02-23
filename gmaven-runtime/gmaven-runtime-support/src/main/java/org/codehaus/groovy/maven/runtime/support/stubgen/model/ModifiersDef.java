@@ -21,7 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Container for entity modifiers, essentially a set of strings.
+ * Representation of for entity modifiers.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -29,6 +29,28 @@ import java.util.Set;
 public class ModifiersDef
     extends Element
 {
+    public static final String ABSTRACT = "abstract";
+
+    public static final String PUBLIC = "public";
+
+    public static final String PRIVATE = "private";
+
+    public static final String PROTECTED = "protected";
+
+    public static final String STATIC = "static";
+
+    public static final String FINAL = "final";
+
+    public static final String SYNCHRONIZED = "synchronized";
+
+    public static final String TRANSIENT = "transient";
+
+    public static final String VOLATILE = "volatile";
+
+    public static final String NATIVE = "native";
+
+    public static final String STRICTFP = "strictfp";
+
     private final Set values = new LinkedHashSet();
 
     public ModifiersDef add(final String modifier) {
@@ -75,47 +97,47 @@ public class ModifiersDef
     //
 
     public boolean isAbstract() {
-        return contains("abstract");
+        return contains(ABSTRACT);
     }
 
     public boolean isPublic() {
-        return contains("public");
+        return contains(PUBLIC);
     }
 
     public boolean isPrivate() {
-        return contains("private");
+        return contains(PRIVATE);
     }
 
     public boolean isProtected() {
-        return contains("protected");
+        return contains(PROTECTED);
     }
 
     public boolean isStatic() {
-        return contains("static");
+        return contains(STATIC);
     }
 
     public boolean isFinal() {
-        return contains("final");
+        return contains(FINAL);
     }
 
     public boolean isSynchronized() {
-        return contains("synchronized");
+        return contains(SYNCHRONIZED);
     }
 
     public boolean isTransient() {
-        return contains("transient");
+        return contains(TRANSIENT);
     }
 
 	public boolean isVolatile() {
-        return contains("volatile");
+        return contains(VOLATILE);
     }
 
 	public boolean isNative() {
-        return contains("native");
+        return contains(NATIVE);
     }
 
 	public boolean isStrictfp() {
-        return contains("strictfp");
+        return contains(STRICTFP);
     }
 
     public boolean hasAccessModifiers() {

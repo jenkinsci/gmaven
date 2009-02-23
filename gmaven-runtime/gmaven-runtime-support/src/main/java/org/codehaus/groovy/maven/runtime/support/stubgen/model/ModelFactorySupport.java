@@ -126,10 +126,10 @@ public abstract class ModelFactorySupport
                 methodDef(node);
             }
             else if (node.is("ENUM_DEF")) {
-                throw new UnsupportedFeatureException("enum");
+                enumDef(node);
             }
             else if (node.is("ANNOTATION_DEF")) {
-                throw new UnsupportedFeatureException("annotation");
+                annotationDef(node);
             }
             else {
                 // everything else should be some sort of statement
@@ -239,7 +239,11 @@ public abstract class ModelFactorySupport
         node = name(def, node);
 
         if (node.is("TYPE_PARAMETERS")) {
-            throw new UnsupportedFeatureException("generics");
+            //
+            // FIXME: Support generics
+            //
+
+            node = node.nextSibling();
         }
 
         if (node.is("EXTENDS_CLAUSE")) {
@@ -257,6 +261,20 @@ public abstract class ModelFactorySupport
         objectBlock(node);
 
         source.addClass(def);
+    }
+
+    protected void enumDef(final Node parent) {
+        //
+        // FIXME: Implement enum support
+        //
+        throw new UnsupportedFeatureException("enum");
+    }
+
+    protected void annotationDef(final Node parent) {
+        //
+        // FIXME: Implement annotation support
+        //
+        throw new UnsupportedFeatureException("annotation");
     }
 
     protected void objectBlock(final Node parent) {
@@ -277,11 +295,11 @@ public abstract class ModelFactorySupport
             else if (node.is("VARIABLE_DEF")) {
                 fieldDef(node);
             }
+            else if (node.is(new String[] { "ENUM_DEF", "ENUM_CONSTANT_DEF" })) {
+                enumDef(node);
+            }
             else if (node.is(new String[] { "STATIC_INIT", "INSTANCE_INIT" })) {
                 // Ignore
-            }
-            else if (node.is(new String[] { "ENUM_DEF", "ENUM_CONSTANT_DEF" })) {
-                throw new UnsupportedFeatureException("enum");
             }
             else {
                 throw new UnexpectedNodeException(node);
@@ -321,10 +339,10 @@ public abstract class ModelFactorySupport
             if (node != null) {
                 if (node.is(new String[] { "SUPER_CTOR_CALL", "CTOR_CALL" })) {
                     if (node.is("SUPER_CTOR_CALL")) {
-                        target.setSuperType("super");
+                        target.setSuperType(ConstructorDef.SUPER);
                     }
                     else {
-                        target.setSuperType("this");
+                        target.setSuperType(ConstructorDef.THIS);
                     }
 
                     node = node.firstChild();
@@ -379,31 +397,31 @@ public abstract class ModelFactorySupport
             def.setType(type(node));
         }
         else if (node.is(new String[] { "LITERAL_true", "LITERAL_false" })) {
-            def.setType(new TypeDef("boolean"));
+            def.setType(TypeDef.BOOLEAN);
         }
         else if (node.is("STRING_LITERAL")) {
-            def.setType(new TypeDef("java.lang.String"));
+            def.setType(TypeDef.STRING);
         }
         else if (node.is("NUM_INT")) {
-            def.setType(new TypeDef("int"));
+            def.setType(TypeDef.INT);
         }
         else if (node.is("NUM_LONG")) {
-            def.setType(new TypeDef("long"));
+            def.setType(TypeDef.LONG);
         }
         else if (node.is("NUM_FLOAT")) {
-            def.setType(new TypeDef("float"));
+            def.setType(TypeDef.FLOAT);
         }
         else if (node.is("NUM_DOUBLE")) {
-            def.setType(new TypeDef("double"));
+            def.setType(TypeDef.DOUBLE);
         }
         else if (node.is("NUM_BIG_INT")) {
-            def.setType(new TypeDef("java.math.BigInteger"));
+            def.setType(TypeDef.BIG_INT);
         }
         else if (node.is("NUM_BIG_DECIMAL")) {
-            def.setType(new TypeDef("java.math.BigDecimal"));
+            def.setType(TypeDef.BIG_DECIMAL);
         }
         else if (node.is("STRING_CONSTRUCTOR")) {
-            def.setType(new TypeDef("java.lang.String"));
+            def.setType(TypeDef.STRING);
         }
         else if (node.is("IDENT")) {
             // Could be a reference to parameters
@@ -441,7 +459,11 @@ public abstract class ModelFactorySupport
         Node node = parent.firstChild();
 
         if (node.is("TYPE_PARAMETERS")) {
-            throw new UnsupportedFeatureException("generics");
+            //
+            // FIXME: Support generics
+            //
+
+            node = node.nextSibling();
         }
 
         node = modifiers(def, node);
@@ -523,34 +545,34 @@ public abstract class ModelFactorySupport
                 // ignore
             }
             else if (node.is("LITERAL_private")) {
-                def.add("private");
+                def.add(ModifiersDef.PRIVATE);
             }
             else if (node.is("LITERAL_protected")) {
-                def.add("protected");
+                def.add(ModifiersDef.PROTECTED);
             }
             else if (node.is("LITERAL_public")) {
-                def.add("public");
+                def.add(ModifiersDef.PUBLIC);
             }
             else if (node.is("ABSTRACT")) {
-                def.add("abstract");
+                def.add(ModifiersDef.ABSTRACT);
             }
             else if (node.is("FINAL")) {
-                def.add("final");
+                def.add(ModifiersDef.FINAL);
             }
             else if (node.is("LITERAL_native")) {
-                def.add("native");
+                def.add(ModifiersDef.NATIVE);
             }
             else if (node.is("LITERAL_static")) {
-                def.add("static");
+                def.add(ModifiersDef.STATIC);
             }
             else if (node.is("LITERAL_synchronized")) {
-                def.add("synchronized");
+                def.add(ModifiersDef.SYNCHRONIZED);
             }
             else if (node.is("LITERAL_transient")) {
-                def.add("transient");
+                def.add(ModifiersDef.TRANSIENT);
             }
             else if (node.is("LITERAL_volatile")) {
-                def.add("volatile");
+                def.add(ModifiersDef.VOLATILE);
             }
             else {
                 throw new UnexpectedNodeException(node);

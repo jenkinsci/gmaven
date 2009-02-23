@@ -19,14 +19,14 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 import java.util.Set;
 
 /**
- * ???
+ * Provides access to parameter-aware elements.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public interface ParametersAware
 {
-    Set getParameters();
+    Set/*<ParameterDef>*/ getParameters();
 
     void addParameter(ParameterDef param);
 }

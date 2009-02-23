@@ -19,12 +19,12 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 import java.util.Set;
 
 /**
- * ???
+ * Provides access to throws-aware elements.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public interface ThrowsAware
 {
-    Set getThrows();
+    Set/*<TypeDef>*/ getThrows();
 }

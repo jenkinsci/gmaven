@@ -19,7 +19,7 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 import java.net.URL;
 
 /**
- * ???
+ * Provides factory access to create a {@link SourceDef} from a URL.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>

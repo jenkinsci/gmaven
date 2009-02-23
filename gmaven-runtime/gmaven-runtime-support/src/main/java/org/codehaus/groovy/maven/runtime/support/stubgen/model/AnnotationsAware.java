@@ -16,13 +16,17 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
+import java.util.Set;
+
 /**
- * ???
+ * Provides access for annotation-aware elements.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public interface AnnotationsAware
 {
-    // TODO:
+    Set/*<AnnotationDef>*/ getAnnotations();
+
+    void addAnnotation(AnnotationDef annotation);
 }

@@ -21,7 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * ???
+ * Representation of a method definition.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -36,9 +36,9 @@ public class MethodDef
     
     private TypeDef returns;
 
-    private Set parameters = new LinkedHashSet();
+    private final Set parameters = new LinkedHashSet();
 
-    private Set throwz = new LinkedHashSet();
+    private final Set throwz = new LinkedHashSet();
 
     public MethodDef() {
         this(Type.METHOD);
@@ -119,6 +119,7 @@ public class MethodDef
         throw new UnsupportedOperationException();
     }
 
+    /** @noinspection UnusedDeclaration*/
     public void setSuperParameters(final Set superParameters) {
         throw new UnsupportedOperationException();
     }
