@@ -44,8 +44,8 @@ public class ParameterDef
         setName(name);
     }
 
-    public ParameterDef(final String typeName, final String name) {
-        this(new TypeDef(typeName), name);
+    public ParameterDef(final String type, final String name) {
+        this(new TypeDef(type), name);
     }
 
     public MethodDef getParent() {

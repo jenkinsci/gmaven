@@ -96,10 +96,22 @@ public class ClassDef
         this.superClass = type;
     }
 
+    public void setSuperClass(final String type) {
+        assert type != null;
+
+        setSuperClass(new TypeDef(type));
+    }
+    
     public void addImplements(final TypeDef type) {
         assert type != null;
 
         implementz.add(type);
+    }
+
+    public void addImplements(final String type) {
+        assert type != null;
+
+        addImplements(new TypeDef(type));
     }
 
     public Set getImplements() {

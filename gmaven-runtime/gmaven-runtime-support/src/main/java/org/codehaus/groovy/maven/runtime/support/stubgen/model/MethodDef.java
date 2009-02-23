@@ -70,8 +70,14 @@ public class MethodDef
         return returns;
     }
 
-    public void setReturns(final TypeDef returns) {
-        this.returns = returns;
+    public void setReturns(final TypeDef type) {
+        this.returns = type;
+    }
+
+    public void setReturns(final String type) {
+        assert type != null;
+
+        setReturns(new TypeDef(type));
     }
 
     public void addParameter(final ParameterDef param) {
@@ -79,6 +85,20 @@ public class MethodDef
 
         param.setParent(this);
         parameters.add(param);
+    }
+
+    public void addParameter(final TypeDef type, final String name) {
+        assert type != null;
+        assert name != null;
+
+        addParameter(new ParameterDef(type, name));
+    }
+
+    public void addParameter(final String type, final String name) {
+        assert type != null;
+        assert name != null;
+
+        addParameter(new ParameterDef(type, name));
     }
 
     public Set getParameters() {

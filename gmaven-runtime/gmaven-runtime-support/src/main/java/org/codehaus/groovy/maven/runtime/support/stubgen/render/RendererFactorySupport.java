@@ -73,7 +73,7 @@ public abstract class RendererFactorySupport
         
         script.getModifiers().add("public");
         script.setName(def.getScriptName());
-        script.setSuperClass(new TypeDef("groovy.lang.Script"));
+        script.setSuperClass("groovy.lang.Script");
 
         ConstructorDef ctor;
 
@@ -83,7 +83,7 @@ public abstract class RendererFactorySupport
 
         ctor = new ConstructorDef();
         ctor.getModifiers().add("public");
-        ctor.addParameter(new ParameterDef("groovy.lang.Binding", "context"));
+        ctor.addParameter("groovy.lang.Binding", "context");
         script.addConstructor(ctor);
 
         MethodDef method;
@@ -97,7 +97,7 @@ public abstract class RendererFactorySupport
 
         method = new MethodDef();
         method.getModifiers().add("public");
-        method.setReturns(new TypeDef("java.lang.Object"));
+        method.setReturns("java.lang.Object");
         method.setName("run");
         script.addMethod(method);
 

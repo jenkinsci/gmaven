@@ -541,10 +541,26 @@ public class RendererSupport
 
         MethodDef def;
 
+        //
+        // FIXME: Should these already be configured in the model, since every Class must implement GroovyObject?
+        //
+
+        /*
+        java.lang.Object invokeMethod(java.lang.String s, java.lang.Object o);
+
+        java.lang.Object getProperty(java.lang.String s);
+
+        void setProperty(java.lang.String s, java.lang.Object o);
+
+        groovy.lang.MetaClass getMetaClass();
+
+        void setMetaClass(groovy.lang.MetaClass metaClass);
+        */
+
         def = new MethodDef();
         def.setParent(clazz);
         def.getModifiers().add("public");
-        def.setReturns(new TypeDef("groovy.lang.MetaClass"));
+        def.setReturns("groovy.lang.MetaClass");
         def.setName("getMetaClass");
 
         if (!definedMethods.containsKey(def.signature())) {
@@ -555,9 +571,9 @@ public class RendererSupport
         def = new MethodDef();
         def.setParent(clazz);
         def.getModifiers().add("public");
-        def.setReturns(new TypeDef("void"));
+        def.setReturns("void");
         def.setName("setMetaClass");
-        def.addParameter(new ParameterDef("groovy.lang.MetaClass", "metaClass"));
+        def.addParameter("groovy.lang.MetaClass", "metaClass");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -567,10 +583,10 @@ public class RendererSupport
         def = new MethodDef();
         def.setParent(clazz);
         def.getModifiers().add("public");
-        def.setReturns(new TypeDef("java.lang.Object"));
+        def.setReturns("java.lang.Object");
         def.setName("invokeMethod");
-        def.addParameter(new ParameterDef("java.lang.String", "name"));
-        def.addParameter(new ParameterDef("java.lang.Object", "args"));
+        def.addParameter("java.lang.String", "name");
+        def.addParameter("java.lang.Object", "args");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -580,9 +596,9 @@ public class RendererSupport
         def = new MethodDef();
         def.setParent(clazz);
         def.getModifiers().add("public");
-        def.setReturns(new TypeDef("java.lang.Object"));
+        def.setReturns("java.lang.Object");
         def.setName("getProperty");
-        def.addParameter(new ParameterDef("java.lang.String", "name"));
+        def.addParameter("java.lang.String", "name");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -592,10 +608,10 @@ public class RendererSupport
         def = new MethodDef();
         def.setParent(clazz);
         def.getModifiers().add("public");
-        def.setReturns(new TypeDef("void"));
+        def.setReturns("void");
         def.setName("setProperty");
-        def.addParameter(new ParameterDef("java.lang.String", "name"));
-        def.addParameter(new ParameterDef("java.lang.Object", "value"));
+        def.addParameter("java.lang.String", "name");
+        def.addParameter("java.lang.Object", "value");
 
         if (!definedMethods.containsKey(def.signature())) {
             renderMethod(out, def);
@@ -641,9 +657,9 @@ public class RendererSupport
             def.getModifiers().add("private");
 
             // Add insane params which no one would ever use... :-(
-            def.addParameter(new ParameterDef("java.lang.Void", "void1"));
-            def.addParameter(new ParameterDef("java.lang.Void", "void2"));
-            def.addParameter(new ParameterDef("java.lang.Void", "void3"));
+            def.addParameter("java.lang.Void", "void1");
+            def.addParameter("java.lang.Void", "void2");
+            def.addParameter("java.lang.Void", "void3");
 
             renderMethod(out, def);
             out.println();

@@ -228,6 +228,7 @@ public abstract class ModelFactorySupport
         assert parent != null;
 
         ClassDef def = new ClassDef();
+        def.addImplements("groovy.lang.GroovyObject");
 
         clazz = def;
 
