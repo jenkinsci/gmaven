@@ -151,6 +151,14 @@
         </developer>
 
         <developer>
+            <id>jasonsmith</id>
+            <name>Jason Smith</name>
+            <email>jsmith@infotrustgroup.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
             <id>jgenender</id>
             <name>Jeff Genender</name>
             <email>jgenender@codehaus.org</email>
