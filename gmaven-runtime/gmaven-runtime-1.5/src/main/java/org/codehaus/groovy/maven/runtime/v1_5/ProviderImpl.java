@@ -60,7 +60,7 @@ public class ProviderImpl
     }
 
     protected Version detectVersion() {
-        return new Version(1, 5, 6);
+        return new Version(1, 5, 7);
     }
 
     public String name() {
