@@ -22,6 +22,7 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.commons.lang.SystemUtils;
 import org.codehaus.groovy.maven.feature.Provider;
 import org.codehaus.groovy.maven.feature.ProviderException;
 import org.codehaus.groovy.maven.feature.ProviderManager;
@@ -52,11 +53,14 @@ public abstract class ProviderMojoSupport
     /**
      * A comma-seperated list of provider keys, in order of preference of selection.
      *
-     * @parameter expression="${gmaven.runtime}" default-value="1.6"
+     * If the invoking JVM is at least Java 1.5, then the Groovy 1.6 runtime will be used, else
+     * the Groovy 1.5 runtime is used.
+     *
+     * @parameter expression="${gmaven.runtime}"
      *
      * @noinspection UnusedDeclaration
      */
-    private String providerSelection;
+    private String providerSelection = detectCompatibleProvider();
 
     /**
      * @component role="org.codehaus.groovy.maven.feature.ProviderLoader" role-hint="artifact"
@@ -88,6 +92,21 @@ public abstract class ProviderMojoSupport
         configureArtifactProviderLoader();
 
         return providerManager;
+    }
+
+    protected String detectCompatibleProvider() {
+        String provider;
+
+        if (SystemUtils.isJavaVersionAtLeast(1.5f)) {
+            provider = "1.6";
+        }
+        else {
+            provider = "1.5";
+        }
+
+        log.debug("Detected compatible provider: {}", provider);
+        
+        return provider;
     }
 
     protected String getProviderSelection() {

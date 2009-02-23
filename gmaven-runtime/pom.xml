@@ -41,7 +41,6 @@
         <module>gmaven-runtime-support</module>
         <module>gmaven-runtime-1.0</module>
         <module>gmaven-runtime-1.5</module>
-        <module>gmaven-runtime-1.6</module>
         <module>gmaven-runtime-loader</module>
     </modules>
 
@@ -60,5 +59,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>java5</id>
+            <activation>
+                <jdk>1.5</jdk>
+            </activation>
+            <modules>
+                <module>gmaven-runtime-1.6</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
