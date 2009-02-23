@@ -22,7 +22,7 @@ package mgroovy186
 class Child
     extends Parent
 {
-	Child() throws Exception {
-		super()
-	}
+    Child() throws Exception {
+        super()
+    }
 }

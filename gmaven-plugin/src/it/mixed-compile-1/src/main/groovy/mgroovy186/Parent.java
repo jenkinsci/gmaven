@@ -21,12 +21,12 @@ package mgroovy186;
  */
 public abstract class Parent
 {
-	protected Parent() throws Exception {
-		throw new ParentException();
+    public Parent() throws Exception {
+        throw new ParentException();
     }
 
-	public static class ParentException
-	    extends Exception
-	{
+    public static class ParentException
+        extends Exception
+    {
     }
 }
