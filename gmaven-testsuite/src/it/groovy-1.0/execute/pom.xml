@@ -38,18 +38,6 @@
         <groovy_version>1.0</groovy_version>
     </properties>
     
-    <!--
-    NOTE: Not required for basic script execution.
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.codehaus.groovy.maven.runtime</groupId>
-            <artifactId>gmaven-runtime-${groovy_version}</artifactId>
-            <version>testing</version>
-        </dependency>
-    </dependencies>
-    -->
-    
     <build>
         <plugins>
             <plugin>
