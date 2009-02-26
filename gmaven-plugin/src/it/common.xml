@@ -103,6 +103,12 @@
                     <groupId>org.codehaus.groovy.maven</groupId>
                     <artifactId>gmaven-plugin</artifactId>
                     <version>testing</version>
+                    <configuration>
+                        <!--
+                        NOTE: Using the Java 1.4 compatible Groovy 1.5 here for compatibility.
+                        -->
+                        <providerSelection>1.5</providerSelection>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
