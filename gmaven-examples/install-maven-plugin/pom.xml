@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.groovy.maven.examples</groupId>
         <artifactId>gmaven-examples</artifactId>
-        <version>1.0-rc-5-SNAPSHOT</version>
+        <version>1.0-rc-5</version>
     </parent>
     
     <artifactId>install-maven-plugin</artifactId>
