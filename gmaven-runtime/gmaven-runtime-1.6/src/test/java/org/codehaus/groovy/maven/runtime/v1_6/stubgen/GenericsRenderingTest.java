@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2006-2007 the original author or authors.
+ * Copyright (C) 2007 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.maven.runtime.support.stubgen.model;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+package org.codehaus.groovy.maven.runtime.v1_6.stubgen;
 
 /**
- * Representation of a package definition.
- *
+ * Tests for rendering generics information.
+ * 
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class PackageDef
-    extends NamedElement
+public class GenericsRenderingTest
+    extends RendererTestSupport
 {
-    private SourceDef parent;
-
-    public SourceDef getParent() {
-        return parent;
-    }
-
-    public void setParent(final SourceDef def) {
-        this.parent = def;
+    public void testRender() throws Exception {
+        chew("generics.groovy.txt");
     }
 }

@@ -21,6 +21,7 @@ import org.codehaus.groovy.maven.runtime.support.stubgen.model.ModelFactory;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.SourceDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.render.Renderer;
 import org.codehaus.groovy.maven.runtime.support.stubgen.render.RendererFactory;
+import org.codehaus.groovy.maven.runtime.support.stubgen.parser.SourceType;
 
 import java.io.StringWriter;
 import java.net.URL;
@@ -28,12 +29,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Tests for the {@link RendererFactoryImpl} class.
+ * Support for rendering tests.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class RendererFactoryImplTest
+public class RendererTestSupport
     extends TestCase
 {
     private ModelFactory modelFactory;
@@ -45,10 +46,15 @@ public class RendererFactoryImplTest
         rendererFactory = new RendererFactoryImpl();
     }
 
-    private SourceDef chew(final URL input) throws Exception {
+    protected void tearDown() throws Exception {
+        modelFactory = null;
+        rendererFactory = null;
+    }
+
+    protected SourceDef chew(final URL input) throws Exception {
         assertNotNull(input);
 
-        SourceDef model = modelFactory.create(input);
+        SourceDef model = modelFactory.create(input, SourceType.GROOVY);
         assertNotNull(model);
 
         Set renderers = rendererFactory.create(model);
@@ -65,26 +71,19 @@ public class RendererFactoryImplTest
             StringWriter writer = new StringWriter();
             renderer.render(writer);
 
-            System.err.println(writer);
+            System.out.println(">>>>");
+            System.out.println(writer);
+            System.out.println("<<<<");
         }
 
+        //
+        // TODO: Add "expected" validating support
+        //
+        
         return model;
     }
 
-    private SourceDef chew(final String resource) throws Exception {
+    protected SourceDef chew(final String resource) throws Exception {
         return chew(getClass().getResource(resource));
-    }
-
-    public void testSimple() throws Exception {
-        chew("SimpleTest.groovy");
-    }
-
-    public void testSimpleInterface() throws Exception {
-        chew("SimpleInterface.groovy");
-    }
-
-    public void testSimpleScript() throws Exception {
-        SourceDef def = chew("SimpleScript.groovy");
-        assertTrue(def.hasStatements());
     }
 }

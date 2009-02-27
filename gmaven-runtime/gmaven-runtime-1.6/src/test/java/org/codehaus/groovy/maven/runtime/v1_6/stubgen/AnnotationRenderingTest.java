@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2006-2007 the original author or authors.
+ * Copyright (C) 2007 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.maven.runtime.support.stubgen.model;
-
-import java.util.Set;
+package org.codehaus.groovy.maven.runtime.v1_6.stubgen;
 
 /**
- * Provides access for annotation-aware elements.
+ * Tests for rendering annotations.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public interface AnnotationsAware
+public class AnnotationRenderingTest
+    extends RendererTestSupport
 {
-    Set/*<AnnotationDef>*/ getAnnotations();
-
-    void addAnnotation(AnnotationDef annotation);
+    public void testRender() throws Exception {
+        chew("annotations.groovy.txt");
+    }
 }

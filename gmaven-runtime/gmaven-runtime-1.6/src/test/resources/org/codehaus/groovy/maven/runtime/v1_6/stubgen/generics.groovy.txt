@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2006-2007 the original author or authors.
+ * Copyright (C) 2007 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package org.codehaus.groovy.maven.runtime.support.stubgen.model;
-
-/**
- * Representation of an annotation definition.
- *
- * @version $Id$
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- */
-public class AnnotationDef
-    extends ClassDef
+class WithTypeParams
 {
-    public AnnotationDef() {
-        super(Type.ANNOTATION);
-    }
+    List<String> strings
+}
+
+class WithTypeParamsAndAnnos
+{
+    @Deprecated
+    List<String> strings
 }

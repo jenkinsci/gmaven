@@ -72,6 +72,10 @@ public class ClassDef
         return type == Type.ENUM;
     }
 
+    public boolean isAnnotation() {
+        return type == Type.ANNOTATION;    
+    }
+
     public PackageDef getPackage() {
         if (parent == null) {
             return null;
@@ -187,6 +191,12 @@ public class ClassDef
         public static final int ENUM_CODE = 2;
 
         public static final Type ENUM = new Type(ENUM_NAME, ENUM_CODE);
+
+        public static final String ANNOTATION_NAME = "@interface";
+
+        public static final int ANNOTATION_CODE = 3;
+
+        public static final Type ANNOTATION = new Type(ANNOTATION_NAME, ANNOTATION_CODE);
 
         public final String name;
 

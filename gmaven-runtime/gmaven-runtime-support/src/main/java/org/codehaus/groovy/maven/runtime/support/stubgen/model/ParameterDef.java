@@ -27,13 +27,11 @@ import java.util.Set;
  */
 public class ParameterDef
     extends NamedElement
-    implements ModifiersAware, AnnotationsAware
+    implements ModifiersAware
 {
     private MethodDef parent;
 
     private TypeDef type;
-
-    private final Set annotations = new LinkedHashSet();
 
     private final ModifiersDef modifiers = new ModifiersDef();
 
@@ -64,16 +62,6 @@ public class ParameterDef
         this.type = type;
     }
 
-    public void addAnnotation(final AnnotationDef annotation) {
-        assert annotation != null;
-
-        annotations.add(annotation);
-    }
-
-    public Set getAnnotations() {
-        return annotations;
-    }
-    
     public ModifiersDef getModifiers() {
         return modifiers;
     }

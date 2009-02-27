@@ -27,11 +27,9 @@ import java.util.Set;
  */
 public abstract class Entity
     extends NamedElement
-    implements ModifiersAware, JavaDocAware, AnnotationsAware
+    implements ModifiersAware, JavaDocAware
 {
     private JavaDocDef javaDoc;
-
-    private final Set annotations = new LinkedHashSet();
 
     private final ModifiersDef modifiers = new ModifiersDef();
 
@@ -49,15 +47,5 @@ public abstract class Entity
 
     public ModifiersDef getModifiers() {
         return modifiers;
-    }
-
-    public void addAnnotation(final AnnotationDef annotation) {
-        assert annotation != null;
-
-        annotations.add(annotation);
-    }
-
-    public Set getAnnotations() {
-        return annotations;
     }
 }

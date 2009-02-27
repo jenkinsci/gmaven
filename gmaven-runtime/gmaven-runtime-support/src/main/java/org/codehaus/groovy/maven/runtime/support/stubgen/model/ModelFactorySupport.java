@@ -17,7 +17,6 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 import org.codehaus.groovy.maven.runtime.support.stubgen.UnexpectedNodeException;
-import org.codehaus.groovy.maven.runtime.support.stubgen.UnsupportedFeatureException;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.Node;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.Parser;
 import org.codehaus.groovy.maven.runtime.support.stubgen.parser.ParserFactory;
@@ -59,8 +58,15 @@ public abstract class ModelFactorySupport
     public SourceDef create(final URL input) throws Exception {
         assert input != null;
 
+        return create(input, SourceType.forURL(input));
+    }
+
+    public SourceDef create(final URL input, final SourceType type) throws Exception {
+        assert input != null;
+        assert type != null;
+
         // Setup the root model element
-        source = createRoot(input);
+        source = createRoot(input, type);
 
         // Reset internal state
         lastNode = null;
@@ -86,13 +92,12 @@ public abstract class ModelFactorySupport
         return source;
     }
 
-    protected SourceDef createRoot(final URL input) {
+    protected SourceDef createRoot(final URL input, final SourceType type) {
         assert input != null;
+        assert type != null;
 
         SourceDef def = new SourceDef();
         def.setUrl(input);
-
-        SourceType type = SourceType.forURL(input);
         def.setType(type);
 
         addDefaultImports(def);
@@ -242,7 +247,6 @@ public abstract class ModelFactorySupport
             //
             // FIXME: Support generics
             //
-
             node = node.nextSibling();
         }
 
@@ -264,17 +268,76 @@ public abstract class ModelFactorySupport
     }
 
     protected void enumDef(final Node parent) {
-        //
-        // FIXME: Implement enum support
-        //
-        throw new UnsupportedFeatureException("enum");
+        assert parent != null;
+
+        parent.ensure("ENUM_DEF");
+
+        EnumDef def = new EnumDef();
+
+        clazz = def;
+
+        Node node = parent.firstChild();
+
+        node = modifiers(def, node);
+
+        node = name(def, node);
+
+        if (node.is("TYPE_PARAMETERS")) {
+            //
+            // FIXME: Support generics
+            //
+            node = node.nextSibling();
+        }
+
+        if (node.is("EXTENDS_CLAUSE")) {
+            def.setSuperClass(type(node));
+            node = node.nextSibling();
+        }
+
+        if (node.is("IMPLEMENTS_CLAUSE")) {
+            def.getImplements().addAll(interfaces(node));
+            node = node.nextSibling();
+        }
+
+        javadocs(def, parent);
+
+        objectBlock(node);
+
+        source.addClass(def);
     }
 
     protected void annotationDef(final Node parent) {
-        //
-        // FIXME: Implement annotation support
-        //
-        throw new UnsupportedFeatureException("annotation");
+        assert parent != null;
+
+        parent.ensure("ANNOTATION_DEF");
+
+        AnnotationDef def = new AnnotationDef();
+
+        clazz = def;
+
+        Node node = parent.firstChild();
+
+        node = modifiers(def, node);
+
+        node = name(def, node);
+
+        if (node.is("TYPE_PARAMETERS")) {
+            //
+            // FIXME: Support generics
+            //
+            node = node.nextSibling();
+        }
+
+        if (node.is("EXTENDS_CLAUSE")) {
+            def.getImplements().addAll(interfaces(node));
+            node = node.nextSibling();
+        }
+
+        javadocs(def, parent);
+
+        objectBlock(node);
+
+        source.addClass(def);
     }
 
     protected void objectBlock(final Node parent) {
@@ -289,14 +352,20 @@ public abstract class ModelFactorySupport
             else if (node.is("METHOD_DEF")) {
                 methodDef(node);
             }
+            else if (node.is("ANNOTATION_FIELD_DEF")) {
+                annotationFieldDef(node);
+            }
             else if (node.is("CTOR_IDENT")) {
                 constructorDef(node);
             }
             else if (node.is("VARIABLE_DEF")) {
                 fieldDef(node);
             }
-            else if (node.is(new String[] { "ENUM_DEF", "ENUM_CONSTANT_DEF" })) {
+            else if (node.is("ENUM_DEF")) {
                 enumDef(node);
+            }
+            else if (node.is("ENUM_CONSTANT_DEF")) {
+                enumConstantDef(node);
             }
             else if (node.is(new String[] { "STATIC_INIT", "INSTANCE_INIT" })) {
                 // Ignore
@@ -462,7 +531,6 @@ public abstract class ModelFactorySupport
             //
             // FIXME: Support generics
             //
-
             node = node.nextSibling();
         }
 
@@ -492,6 +560,43 @@ public abstract class ModelFactorySupport
         clazz.addMethod(def);
     }
 
+    protected void annotationFieldDef(final Node parent) {
+        assert parent != null;
+        
+        // methodDef(parent);
+
+        MethodDef def = new MethodDef();
+
+        Node node = parent.firstChild();
+
+        if (node.is("TYPE_PARAMETERS")) {
+            //
+            // FIXME: Support generics
+            //
+            node = node.nextSibling();
+        }
+
+        node = modifiers(def, node);
+
+        if (node.is("TYPE")) {
+            def.setReturns(type(node));
+            node = node.nextSibling();
+        }
+        else {
+            def.setReturns(new TypeDef());
+        }
+
+        //
+        // TODO: Support "default"
+        //
+        
+        node = name(def, node);
+
+        javadocs(def, parent);
+
+        clazz.addMethod(def);
+    }
+    
     protected void fieldDef(final Node parent) {
         assert parent != null;
 
@@ -514,6 +619,44 @@ public abstract class ModelFactorySupport
         javadocs(def, parent);
 
         clazz.addField(def);
+    }
+
+    protected void enumConstantDef(final Node parent) {
+        assert parent != null;
+
+        parent.ensure("ENUM_CONSTANT_DEF");
+
+        assert clazz instanceof EnumDef;
+        EnumDef def = (EnumDef)clazz;
+
+        Node node = parent.firstChild();
+
+        if (node.is("ANNOTATIONS")) {
+            node = node.nextSibling();
+        }
+
+        String name = identifier(node);
+
+        //
+        // TODO: Determine initialization expression
+        //
+
+        /*
+        Expression init = null;
+        element = element.getNextSibling();
+        if (element!=null) {
+            init = expression(element);
+            if (isType(ELIST,element)) {
+            	if(init instanceof ListExpression && !((ListExpression)init).isWrapped()) {
+                    ListExpression le = new ListExpression();
+                    le.addExpression(init);
+                    init = le;
+            	}
+            }
+        }
+        */
+
+        def.addConstant(name);
     }
 
     //
@@ -541,8 +684,13 @@ public abstract class ModelFactorySupport
 
         for (Node node = parent.firstChild(); node != null; node = node.nextSibling()) {
 
-            if (node.is(new String[] { "STRICTFP", "STATIC_IMPORT", "ANNOTATION" })) {
+            if (node.is(new String[] { "STRICTFP", "STATIC_IMPORT" })) {
                 // ignore
+            }
+            if (node.is("ANNOTATION")) {
+                //
+                // FIXME: Add annotation support
+                //
             }
             else if (node.is("LITERAL_private")) {
                 def.add(ModifiersDef.PRIVATE);
