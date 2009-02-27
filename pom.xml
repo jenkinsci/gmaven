@@ -158,6 +158,7 @@
                 <role>Developer</role>
             </roles>
         </developer>
+        
         <developer>
             <id>jgenender</id>
             <name>Jeff Genender</name>
@@ -414,7 +415,11 @@
         <module>gmaven-examples</module>
         <module>gmaven-testsuite</module>
     </modules>
-
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
     <build>
         <extensions>
             <extension>
