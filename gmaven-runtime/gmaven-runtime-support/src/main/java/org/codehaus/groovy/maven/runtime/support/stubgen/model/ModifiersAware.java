@@ -16,6 +16,8 @@
 
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
+import java.util.Set;
+
 /**
  * Provides access for modifiers-aware elments.
  *
@@ -25,4 +27,6 @@ package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 public interface ModifiersAware
 {
     ModifiersDef getModifiers();
+    void addAnnotation(AnnotationDef a);
+    Set getAnnotations();
 }
