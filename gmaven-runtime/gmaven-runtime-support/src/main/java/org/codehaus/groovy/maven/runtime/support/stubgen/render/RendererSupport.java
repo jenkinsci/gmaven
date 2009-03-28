@@ -31,6 +31,7 @@ import org.codehaus.groovy.maven.runtime.support.stubgen.model.ParameterDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.SuperParameterDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.TagDef;
 import org.codehaus.groovy.maven.runtime.support.stubgen.model.TypeDef;
+import org.codehaus.groovy.maven.runtime.support.stubgen.model.AnnotationDef;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -232,6 +233,11 @@ public class RendererSupport
         assert out != null;
         assert source != null;
 
+        for (Iterator itr = source.getAnnotations().iterator(); itr.hasNext();) {
+            AnnotationDef a = (AnnotationDef) itr.next();
+            renderAnnotation(out,a);
+        }
+
         ModifiersDef modifiers = source.getModifiers();
         assert modifiers != null;
 
@@ -252,6 +258,12 @@ public class RendererSupport
 
             out.print(" ");
         }
+    }
+
+    private void renderAnnotation(PrintWriter out, AnnotationDef source) {
+        out.print('@');
+        out.print(source.getName());
+        out.print(' ');
     }
 
     protected void renderJavaDoc(final PrintWriter out, final JavaDocAware source, final String indent) {

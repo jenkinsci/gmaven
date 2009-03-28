@@ -17,7 +17,10 @@
 package org.codehaus.groovy.maven.runtime.support.stubgen.model;
 
 /**
- * Representation of an annotation definition.
+ * Representation of an use of annotation.
+ *
+ * TODO: rename the class to AnnotationUse, not AnnotationDef.
+ * TODO: annotations aren't named. They are keyed by a type.
  *
  * @version $Id$
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
