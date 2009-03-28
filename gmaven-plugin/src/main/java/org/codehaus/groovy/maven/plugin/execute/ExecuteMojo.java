@@ -17,9 +17,12 @@
 package org.codehaus.groovy.maven.plugin.execute;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.settings.Settings;
 import org.codehaus.groovy.maven.common.ArtifactItem;
 import org.codehaus.groovy.maven.feature.Component;
@@ -147,7 +150,22 @@ public class ExecuteMojo
      * @noinspection UnusedDeclaration
      */
     private RealmManager realmManager;
-    
+
+    /**
+     * @component
+     */
+    private MavenProjectHelper projectHelper;
+
+    /**
+     * @component
+     */
+    private ArtifactHandlerManager artifactHandlerManager;
+
+    /**
+     * @component
+     */
+    private MavenProjectBuilder mavenProjectBuilder;
+
     public ExecuteMojo() {
         super(ScriptExecutor.KEY);
     }
@@ -202,6 +220,7 @@ public class ExecuteMojo
         // Stuff in some other Maven bits
         context.set("session", session);
         context.set("settings", settings);
+        context.set("maven",new MavenUtility(artifactResolver, artifactFactory, artifactMetadataSource, artifactHandlerManager, artifactRepository, remoteRepositories, projectHelper, mavenProjectBuilder, project, session));
 
         // Stuff in an Ant helper
         context.set("ant", MagicAttribute.ANT_BUILDER);
