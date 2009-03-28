@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.codehaus.groovy.maven</groupId>
         <artifactId>gmaven</artifactId>
-        <version>1.0-rc-5</version>
+        <version>1.0-rc-5-kohsuke-1</version>
     </parent>
 
     <groupId>org.codehaus.groovy.maven.runtime</groupId>
@@ -41,6 +41,7 @@
         <module>gmaven-runtime-support</module>
         <module>gmaven-runtime-1.0</module>
         <module>gmaven-runtime-1.5</module>
+        <module>gmaven-runtime-1.6</module>
         <module>gmaven-runtime-loader</module>
     </modules>
 
