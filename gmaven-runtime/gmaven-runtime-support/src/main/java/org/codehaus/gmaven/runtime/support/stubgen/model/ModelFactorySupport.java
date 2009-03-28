@@ -701,10 +701,8 @@ public abstract class ModelFactorySupport
             if (node.is(new String[] { "STRICTFP", "STATIC_IMPORT" })) {
                 // ignore
             }
-            if (node.is("ANNOTATION")) {
-                //
-                // FIXME: Add annotation support
-                //
+            else if (node.is("ANNOTATION")) {
+                target.addAnnotation(annotation(node));
             }
             else if (node.is("LITERAL_private")) {
                 def.add(ModifiersDef.PRIVATE);
@@ -744,6 +742,16 @@ public abstract class ModelFactorySupport
         target.getModifiers().merge(def);
 
         return parent.nextSibling();
+    }
+
+    private AnnotationDef annotation(Node node) {
+        AnnotationDef a = new AnnotationDef();
+        Node child = node.firstChild();
+        child = name(a,child);
+//        if(child.is("ANNOTATION_MEMBER_VALUE_PAIR")
+//        a.setType(type(child));
+//        child = child.nextSibling();
+        return a;
     }
 
     protected Set interfaces(final Node parent) {

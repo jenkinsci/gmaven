@@ -16,6 +16,7 @@
 
 package org.codehaus.gmaven.runtime.support.stubgen.render;
 
+import org.codehaus.gmaven.runtime.support.stubgen.model.AnnotationDef;
 import org.codehaus.gmaven.runtime.support.stubgen.model.ClassDef;
 import org.codehaus.gmaven.runtime.support.stubgen.model.ConstructorDef;
 import org.codehaus.gmaven.runtime.support.stubgen.model.EnumConstantDef;
@@ -233,6 +234,11 @@ public class RendererSupport
         assert out != null;
         assert source != null;
 
+        for (Iterator itr = source.getAnnotations().iterator(); itr.hasNext();) {
+            AnnotationDef a = (AnnotationDef) itr.next();
+            renderAnnotation(out,a);
+        }
+
         ModifiersDef modifiers = source.getModifiers();
         assert modifiers != null;
 
@@ -253,6 +259,12 @@ public class RendererSupport
 
             out.print(" ");
         }
+    }
+
+    private void renderAnnotation(PrintWriter out, AnnotationDef source) {
+        out.print('@');
+        out.print(source.getName());
+        out.print(' ');
     }
 
     protected void renderJavaDoc(final PrintWriter out, final JavaDocAware source, final String indent) {
