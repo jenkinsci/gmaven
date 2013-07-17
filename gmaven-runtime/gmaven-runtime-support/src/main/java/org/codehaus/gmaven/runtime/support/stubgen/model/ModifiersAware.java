@@ -16,8 +16,6 @@
 
 package org.codehaus.gmaven.runtime.support.stubgen.model;
 
-import java.util.Set;
-
 /**
  * Provides access for modifiers-aware elments.
  *
@@ -27,6 +25,4 @@ import java.util.Set;
 public interface ModifiersAware
 {
     ModifiersDef getModifiers();
-    void addAnnotation(AnnotationDef a);
-    Set getAnnotations();
 }
