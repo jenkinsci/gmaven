@@ -628,8 +628,12 @@ public class JavaStubGenerator {
         }
     }
 
+    private String className(ClassNode c) {
+        return c.getName().replace('$','.');
+    }
+
     private void printAnnotation(PrintWriter out, AnnotationNode annotation) {
-        out.print("@" + annotation.getClassNode().getName() + "(");
+        out.print("@" + className(annotation.getClassNode()) + "(");
         boolean first = true;
         Map<String, Expression> members = annotation.getMembers();
         for (String key : members.keySet()) {
@@ -665,7 +669,13 @@ public class JavaStubGenerator {
                 val = constValue.toString();
             else
                 val = "\"" + escapeSpecialChars(constValue.toString()) + "\"";
-        } else if (memberValue instanceof PropertyExpression || memberValue instanceof VariableExpression) {
+        } else if (memberValue instanceof PropertyExpression) {
+            // assume must be static class field or enum value or class that Java can resolve
+            // left hand side must be a ClassExpression
+            PropertyExpression pe = (PropertyExpression) memberValue;
+            val = className(pe.getObjectExpression().getType())+"."+pe.getProperty().getText();
+
+        } else if (memberValue instanceof VariableExpression) {
             // assume must be static class field or enum value or class that Java can resolve
             val = ((Expression) memberValue).getText();
         } else if (memberValue instanceof ClosureExpression) {
@@ -673,7 +683,7 @@ public class JavaStubGenerator {
             // case where annotation type uses Class<? extends Closure> for the closure's type
             val = "groovy.lang.Closure.class";
         } else if (memberValue instanceof ClassExpression) {
-            val = ((Expression) memberValue).getText() + ".class";
+            val = className(((ClassExpression) memberValue).getType()) + ".class";
         }
         return val;
     }
