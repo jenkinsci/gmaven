@@ -111,9 +111,9 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:git:git://github.com/groovy/gmaven.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/groovy/gmaven.git</developerConnection>
-        <url>https://github.com/groovy/gmaven</url>
+        <connection>scm:git:git://github.com/kohsuke/gmaven.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/kohsuke/gmaven.git</developerConnection>
+        <url>https://github.com/kohsuke/gmaven</url>
     </scm>
 
     <issueManagement>
@@ -1099,6 +1099,21 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+      <site>
+        <id>github-pages</id>
+        <url>file:///tmp/dummy</url>
+      </site>
+      <repository>
+        <id>maven.jenkins-ci.org</id>
+        <url>http://maven.jenkins-ci.org:8081/content/repositories/releases</url>
+      </repository>
+      <snapshotRepository>
+        <id>maven.jenkins-ci.org</id>
+        <url>http://maven.jenkins-ci.org:8081/content/repositories/snapshots</url>
+      </snapshotRepository>
+    </distributionManagement>
 
 </project>
 
