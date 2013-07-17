@@ -945,9 +945,6 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
-                                <configuration>
-                                    <passphrase>${release.gpgPassphrase}</passphrase>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
