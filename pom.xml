@@ -111,9 +111,9 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:git:git://github.com/kohsuke/gmaven.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/kohsuke/gmaven.git</developerConnection>
-        <url>https://github.com/kohsuke/gmaven</url>
+        <connection>scm:git:git://github.com/jenkinsci/gmaven.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/gmaven.git</developerConnection>
+        <url>https://github.com/jenkinsci/gmaven</url>
     </scm>
 
     <issueManagement>
