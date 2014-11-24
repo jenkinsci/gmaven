@@ -30,7 +30,7 @@
     <name>GMaven</name>
     <packaging>pom</packaging>
 
-    <version>1.5-jenkins-2-SNAPSHOT</version>
+    <version>1.5-jenkins-2</version>
 
     <description>
         GMaven provides integration of the Groovy language into Maven.
@@ -114,7 +114,8 @@
         <connection>scm:git:git://github.com/jenkinsci/gmaven.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/gmaven.git</developerConnection>
         <url>https://github.com/jenkinsci/gmaven</url>
-    </scm>
+      <tag>gmaven-1.5-jenkins-2</tag>
+  </scm>
 
     <issueManagement>
         <system>jira</system>
