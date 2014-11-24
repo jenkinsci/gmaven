@@ -39,7 +39,7 @@ public class GenerateStubsMojo
     /**
      * The directory where generated Java stub files will be placed.
      *
-     * @parameter default-value="${project.build.directory}/generated-sources/groovy-stubs/main"
+     * @parameter default-value="${project.build.directory}/generated-sources/groovy-stubs"
      * @required
      * @noinspection UnusedDeclaration
      */
