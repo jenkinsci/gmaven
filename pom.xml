@@ -544,7 +544,7 @@
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <useReleaseProfile>false</useReleaseProfile>
                         <goals>deploy</goals>
-                        <arguments>-B -Dit -Prelease</arguments>
+                        <arguments>-B -Prelease</arguments><!-- TODO -Dit -->
                     </configuration>
                 </plugin>
 
