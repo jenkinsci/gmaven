@@ -52,6 +52,15 @@ import java.util.List;
 public abstract class AbstractGenerateStubsMojo
     extends CompilerMojoSupport
 {
+    /**
+     * Sets the encoding to be used when reading and writing source files.
+     *
+     * @parameter expression="${sourceEncoding}" default-value="${project.build.sourceEncoding}"
+     *
+     * @noinspection UnusedDeclaration
+     */
+    private String sourceEncoding;
+
     protected AbstractGenerateStubsMojo() {
         super(StubCompiler.KEY);
     }
@@ -123,6 +132,10 @@ public abstract class AbstractGenerateStubsMojo
         compiler.setTargetDirectory(getOutputDirectory());
 
         compiler.setClassPath(createClassPath());
+
+        if (sourceEncoding != null) {
+            compiler.config().set(StubCompiler.Keys.SOURCE_ENCODING, sourceEncoding);
+        }
 
         //
         // TODO: Bridge mojo config to component config

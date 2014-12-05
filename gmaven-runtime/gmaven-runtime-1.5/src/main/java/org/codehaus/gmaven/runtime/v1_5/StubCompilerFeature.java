@@ -92,12 +92,8 @@ public class StubCompilerFeature
         private int render(final URL url) throws Exception {
             assert url != null;
 
-            SourceDef model;
-            if (config.contains(SOURCE_ENCODING)) {
-                model = modelFactory.create(url, config.get(SOURCE_ENCODING, (String)null));
-            } else {
-                model = modelFactory.create(url);
-            }
+            String encoding = config.get(SOURCE_ENCODING, (String)null);
+            SourceDef model = modelFactory.create(url, encoding);
 
             Set renderers = rendererFactory.create(model);
 
@@ -108,7 +104,7 @@ public class StubCompilerFeature
             while (iter.hasNext()) {
                 Renderer renderer = (Renderer)iter.next();
 
-                Writer writer = createWriter(renderer, getTargetDirectory());
+                Writer writer = createWriter(renderer, getTargetDirectory(), encoding);
 
                 try {
                     renderer.render(writer);
@@ -122,7 +118,7 @@ public class StubCompilerFeature
             return count;
         }
 
-        private PrintWriter createWriter(final Renderer renderer, final File outputDir) throws IOException {
+        private PrintWriter createWriter(final Renderer renderer, final File outputDir, String encoding) throws IOException {
             assert renderer != null;
             assert outputDir != null;
 
@@ -142,7 +138,8 @@ public class StubCompilerFeature
 
             outputFile.getParentFile().mkdirs();
 
-            return new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+            FileOutputStream os = new FileOutputStream(outputFile);
+            return new PrintWriter(new BufferedWriter(encoding != null ? new OutputStreamWriter(os, encoding) : new OutputStreamWriter(os)));
         }
     }
 }
