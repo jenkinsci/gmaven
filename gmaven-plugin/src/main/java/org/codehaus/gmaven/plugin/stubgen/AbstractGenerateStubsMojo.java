@@ -21,15 +21,24 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.shared.io.scan.mapping.SourceMapping;
 import org.apache.maven.shared.io.scan.mapping.SuffixMapping;
 import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.tools.ant.taskdefs.Basename;
 import org.codehaus.gmaven.feature.Component;
 import org.codehaus.gmaven.plugin.CompilerMojoSupport;
 import org.codehaus.gmaven.runtime.StubCompiler;
+import org.codehaus.plexus.util.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Support for Java stub generation mojos.
@@ -158,7 +167,55 @@ public abstract class AbstractGenerateStubsMojo
                 new SuffixMapping(".groovy", ".java"),
             };
 
-            File[] files = scanForSources(sources[i], mappings);
+            FileSet sourceDir = sources[i];
+            boolean globalVarsMode = sources[i].getDirectory().endsWith("/vars/");
+            if (globalVarsMode) {
+                getLog().info("Discovered Pipeline Library global Vars, will handle in a custom way");
+                File tmp = new File(project.getBasedir(), "target/generated-sources/globalVarsTmp");
+                Files.createDirectories(new File(tmp, "globalvars").toPath());
+
+                File[] srcFiles = scanForSources(sources[i], mappings);
+                Map<String, String> varsIndex = new HashMap<>(srcFiles.length);
+                for (File varFile : srcFiles) {
+                    String varName = varFile.getName().replace(".groovy","");
+                    String className = "Var" + varName.toUpperCase();
+                    File dest = new File(tmp, "globalvars/" + className + ".groovy");
+                    try (FileWriter out = new FileWriter(dest)) {
+                        out.write("package globalvars\n\n");
+                        out.write("class " + className + " {\n");
+                        try(BufferedReader b = new BufferedReader(new FileReader(varFile))) {
+                            String readLine = "";
+                            while ((readLine = b.readLine()) != null) {
+                                if (readLine.startsWith("#")) {
+                                    // Var starts from the "#" comment
+                                    readLine = "// " + readLine;
+                                }
+                                out.write(readLine + "\n");
+                            }
+                        }
+                        out.write("\n}\n");
+                    }
+                    varsIndex.put(varName, className);
+                }
+
+                // Write registry file
+                try(FileWriter out = new FileWriter(new File(tmp, "Vars.groovy"))) {
+                    out.write("class GlobalVars {\n");
+                    for(Map.Entry<String, String> entry : varsIndex.entrySet()) {
+                        out.write(String.format("/** Global variable %s */\n", entry.getKey()));
+                        out.write(String.format("globalvars.%s %s\n", entry.getValue(), entry.getKey()));
+                    }
+                    out.write("}\n");
+                }
+
+                sourceDir = new FileSet();
+                sourceDir.setDirectory(tmp.getAbsolutePath());
+                sourceDir.setIncludes(sources[i].getIncludes());
+                sourceDir.setLineEnding(sources[i].getLineEnding());
+                sourceDir.setModelEncoding(sources[i].getModelEncoding());
+            }
+
+            File[] files = scanForSources(sourceDir, mappings);
 
             for (int j=0; j < files.length; j++) {
                 log.debug(" + " + files[j]);
